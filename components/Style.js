@@ -1,7 +1,8 @@
 import React, { useContext } from 'react';
-import { Context } from './Context';
+import { Context } from '../main-components/Context';
 import { useParams, Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { connect } from 'react-redux';
 
 const SongPreviewContainer = styled.div`
 	display: grid;
@@ -19,9 +20,9 @@ export const SongPreview = styled.div`
 	}
 `;
 
-export default function Style() {
+ function Style({ songs }) {
 	const { styleName } = useParams();
-	const { songs } = useContext(Context);
+	// const { songs } = useContext(Context);
 
 	function createSongTemplate(song) {
 		return (
@@ -51,3 +52,8 @@ export default function Style() {
 		</div>
 	);
 }
+
+export default connect((state) => ({
+	songs: state.songsReducer,
+	style: state.stylesReducers
+}))(Style)

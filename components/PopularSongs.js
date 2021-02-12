@@ -1,7 +1,9 @@
 import React, { useContext } from 'react';
-import { Context } from './Context';
+import { Context } from '../main-components/Context';
 import SongItem from './SongItem';
 import styled from 'styled-components';
+import { connect } from 'react-redux'
+import { songsReducer } from '../Reducer';
 
 const SongsContainer = styled.ul`
 	display: grid;
@@ -11,8 +13,9 @@ const SongsContainer = styled.ul`
 	margin: 0;
 `;
 
-export default function PopularSongs() {
-	const { songs } = useContext(Context);
+function PopularSongs({ songs }) {
+	// const { songs } = useContext(Context);
+	console.log(songs);
 
 	function sortSongsByPopularity(songA, songB) {
 		const ratioA = songA.upvotes - songA.downvotes;
@@ -35,3 +38,9 @@ export default function PopularSongs() {
 		</div>
 	);
 }
+
+export default connect(
+	(state) => ({
+		songs : state.songsReducer
+	}), null
+)(PopularSongs)
