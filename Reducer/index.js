@@ -3,8 +3,10 @@ import songsData from "../songsData.json";
 
 export function songsReducer(state = songsData, action) {
   switch (action.type) {
+    case "SET_SONGS":
+      return action.value
     case "ADD_SONG":
-      return [...state, action.value];
+      return  [...state, action.value];
     case "FAVORITE":
       return state.map((song) => {
         if (song.id === action.value) {
@@ -40,7 +42,7 @@ export function songsReducer(state = songsData, action) {
   }
 }
 
-export function cartItemsReducers(state = [(state) => [...state]], action) {
+export function cartItemsReducers(state = [], action) {
   switch (action.type) {
     case "SET_CART_ITEMS":
       return [...state, action.value];
@@ -65,6 +67,8 @@ export function stylesReducers(state = initialStyleState, action) {
       return state;
   }
 }
+
+
 
 export const rootReducers = combineReducers({
   songsReducer,

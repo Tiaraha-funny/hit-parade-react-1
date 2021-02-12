@@ -1,13 +1,13 @@
-import { createStore } from "redux";
+import { applyMiddleware, createStore } from "redux";
+import thunk from "redux-thunk";
 import { rootReducers } from "./Reducer";
 import state from "./songsData.json";
 // console.log(state);
 
-const store = createStore(rootReducers, state);
-console.log(store.getState());
+const store = createStore(rootReducers, state, applyMiddleware(thunk));
 
 // store.subscribe(() => {
-    // console.log(store.getState());
+// console.log(store.getState());
 // })
 
 export default store;

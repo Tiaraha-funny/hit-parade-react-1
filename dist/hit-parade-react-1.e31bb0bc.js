@@ -55004,15 +55004,20 @@ exports.emptyCart = emptyCart;
 exports.favoriteSong = favoriteSong;
 exports.upvoteSong = upvoteSong;
 exports.downvoteSong = downvoteSong;
+exports.localeStorageCarts = localeStorageCarts;
 
 var _songsData = _interopRequireDefault(require("../songsData.json"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function setSongs(song) {
-  return {
-    type: "SET_SONGS",
-    value: song
+function setSongs() {
+  return function (dispatch) {
+    var lsSongs = JSON.parse(localStorage.getItem("songs"));
+    console.log(lsSongs);
+    dispatch({
+      type: "add_SONGS",
+      value: lsSongs ? lsSongs : _songsData.default
+    });
   };
 }
 
@@ -55076,6 +55081,13 @@ function downvoteSong(dislike) {
   return {
     type: "DECREMENT",
     value: dislike
+  };
+}
+
+function localeStorageCarts(cartsStorage) {
+  return {
+    type: "LOCALE_STORAGE_CARTS",
+    value: cartsStorage
   };
 }
 },{"../songsData.json":"songsData.json"}],"components/SongItem.js":[function(require,module,exports) {
@@ -55205,6 +55217,8 @@ var _SongItem = _interopRequireDefault(require("./SongItem"));
 
 var _styledComponents = _interopRequireDefault(require("styled-components"));
 
+var _Action = require("../Action");
+
 var _reactRedux = require("react-redux");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -55214,7 +55228,7 @@ function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function _templateObject() {
-  var data = _taggedTemplateLiteral(["\n\tdisplay: grid;\n\tgrid-template-columns: 500px;\n\tgap: 20px;\n\tpadding: 0;\n\tmargin: 0;\n"]);
+  var data = _taggedTemplateLiteral(["\n  display: grid;\n  grid-template-columns: 500px;\n  gap: 20px;\n  padding: 0;\n  margin: 0;\n"]);
 
   _templateObject = function _templateObject() {
     return data;
@@ -55229,6 +55243,13 @@ var SongsContainer = _styledComponents.default.ul(_templateObject());
 
 function PopularSongs(_ref) {
   var songs = _ref.songs;
+  var dispatch = (0, _reactRedux.useDispatch)();
+  (0, _react.useEffect)(function () {
+    localStorage.setItem("songs", JSON.stringify(songs));
+  }, [songs]);
+  (0, _react.useEffect)(function () {
+    dispatch((0, _Action.setSongs)());
+  }, []);
 
   function sortSongsByPopularity(songA, songB) {
     var ratioA = songA.upvotes - songA.downvotes;
@@ -55257,7 +55278,7 @@ var _default = (0, _reactRedux.connect)(function (state) {
 }, null)(PopularSongs);
 
 exports.default = _default;
-},{"react":"node_modules/react/index.js","./SongItem":"components/SongItem.js","styled-components":"node_modules/styled-components/dist/styled-components.browser.esm.js","react-redux":"node_modules/react-redux/es/index.js"}],"components/StylesList.js":[function(require,module,exports) {
+},{"react":"node_modules/react/index.js","./SongItem":"components/SongItem.js","styled-components":"node_modules/styled-components/dist/styled-components.browser.esm.js","../Action":"Action/index.js","react-redux":"node_modules/react-redux/es/index.js"}],"components/StylesList.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -72384,7 +72405,35 @@ function App() {
     path: "/cart"
   }, /*#__PURE__*/_react.default.createElement(_Cart.default, null))));
 }
-},{"react":"node_modules/react/index.js","react-router-dom":"node_modules/react-router-dom/esm/react-router-dom.js","../components/Menu":"components/Menu.js","../components/PopularSongs":"components/PopularSongs.js","../components/StylesList":"components/StylesList.js","../components/Style":"components/Style.js","../components/Song":"components/Song.js","../components/AddSong":"components/AddSong.js","../components/Cart":"components/Cart.js"}],"Reducer/index.js":[function(require,module,exports) {
+},{"react":"node_modules/react/index.js","react-router-dom":"node_modules/react-router-dom/esm/react-router-dom.js","../components/Menu":"components/Menu.js","../components/PopularSongs":"components/PopularSongs.js","../components/StylesList":"components/StylesList.js","../components/Style":"components/Style.js","../components/Song":"components/Song.js","../components/AddSong":"components/AddSong.js","../components/Cart":"components/Cart.js"}],"node_modules/redux-thunk/es/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+function createThunkMiddleware(extraArgument) {
+  return function (_ref) {
+    var dispatch = _ref.dispatch,
+        getState = _ref.getState;
+    return function (next) {
+      return function (action) {
+        if (typeof action === 'function') {
+          return action(dispatch, getState, extraArgument);
+        }
+
+        return next(action);
+      };
+    };
+  };
+}
+
+var thunk = createThunkMiddleware();
+thunk.withExtraArgument = createThunkMiddleware;
+var _default = thunk;
+exports.default = _default;
+},{}],"Reducer/index.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -72424,6 +72473,9 @@ function songsReducer() {
   var action = arguments.length > 1 ? arguments[1] : undefined;
 
   switch (action.type) {
+    case "SET_SONGS":
+      return action.value;
+
     case "ADD_SONG":
       return [].concat(_toConsumableArray(state), [action.value]);
 
@@ -72466,9 +72518,7 @@ function songsReducer() {
 }
 
 function cartItemsReducers() {
-  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [function (state) {
-    return _toConsumableArray(state);
-  }];
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
   var action = arguments.length > 1 ? arguments[1] : undefined;
 
   switch (action.type) {
@@ -72522,6 +72572,8 @@ exports.default = void 0;
 
 var _redux = require("redux");
 
+var _reduxThunk = _interopRequireDefault(require("redux-thunk"));
+
 var _Reducer = require("./Reducer");
 
 var _songsData = _interopRequireDefault(require("./songsData.json"));
@@ -72529,14 +72581,13 @@ var _songsData = _interopRequireDefault(require("./songsData.json"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // console.log(state);
-var store = (0, _redux.createStore)(_Reducer.rootReducers, _songsData.default);
-console.log(store.getState()); // store.subscribe(() => {
+var store = (0, _redux.createStore)(_Reducer.rootReducers, _songsData.default, (0, _redux.applyMiddleware)(_reduxThunk.default)); // store.subscribe(() => {
 // console.log(store.getState());
 // })
 
 var _default = store;
 exports.default = _default;
-},{"redux":"node_modules/redux/es/redux.js","./Reducer":"Reducer/index.js","./songsData.json":"songsData.json"}],"index.js":[function(require,module,exports) {
+},{"redux":"node_modules/redux/es/redux.js","redux-thunk":"node_modules/redux-thunk/es/index.js","./Reducer":"Reducer/index.js","./songsData.json":"songsData.json"}],"index.js":[function(require,module,exports) {
 "use strict";
 
 var _react = _interopRequireDefault(require("react"));
@@ -72584,7 +72635,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54996" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61838" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
