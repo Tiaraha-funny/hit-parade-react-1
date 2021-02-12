@@ -6,11 +6,31 @@ export function songsReducer(state = songsData, action) {
     case "ADD_SONG":
       return [...state, action.value];
     case "FAVORITE":
-      return state.map(song => {
+      return state.map((song) => {
         if (song.id === action.value) {
           return {
             ...song,
             isFavorited: !song.isFavorited,
+          };
+        }
+        return song;
+      });
+    case "INCREMENT":
+      return state.map((song) => {
+        if (song.id === action.value) {
+          return {
+            ...song,
+            upvotes: song.upvotes + 1,
+          };
+        }
+        return song;
+      });
+    case "DECREMENT":
+      return state.map((song) => {
+        if (song.id === action.value) {
+          return {
+            ...song,
+            downvotes: song.downvotes + 1,
           };
         }
         return song;
@@ -26,6 +46,10 @@ export function cartItemsReducers(state = [(state) => [...state]], action) {
       return [...state, action.value];
     case "ADD_TO_CART":
       return [...state, action.value];
+    case "REMOVE_CART_ITEMS":
+      return state.filter((cartItem) => cartItem.id !== action.value);
+    case "EMPTY_CART":
+      return [];
     default:
       return state;
   }
@@ -42,20 +66,8 @@ export function stylesReducers(state = initialStyleState, action) {
   }
 }
 
-export function favoriteReducer(state = 0, action) {
-  switch (action.type) {
-    case "INCREMENT":
-      return state + 1;
-    case "DECREMENT":
-      return state + 1;
-    default:
-      return state;
-  }
-}
-
 export const rootReducers = combineReducers({
   songsReducer,
   cartItemsReducers,
   stylesReducers,
-  // favoriteReducer,
 });

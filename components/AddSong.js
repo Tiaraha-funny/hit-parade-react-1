@@ -29,8 +29,6 @@ const FormStyles = styled.form`
 // value, onChange
 
 function AddSong({ styles, addSong }) {
-  console.log(addSong);
-  // const { addSong } = useContext(Context);
 
   const [title, setTitle] = useState("");
   const [artist, setArtist] = useState("");

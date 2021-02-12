@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import styled from "styled-components";
-import { Context } from "../main-components/Context";
 import { Link } from "react-router-dom";
 
 import {
@@ -14,7 +13,13 @@ import {
 } from "react-icons/ai";
 
 import { connect } from "react-redux";
-import { favoriteSong } from "../Action";
+import {
+  addToCart,
+  downvoteSong,
+  favoriteSong,
+  removeCartItem,
+  upvoteSong,
+} from "../Action";
 
 const SongItemStyle = styled.div`
   display: flex;
@@ -44,16 +49,15 @@ const SongItemStyle = styled.div`
   }
 `;
 
-function SongItem({ song, favoriteSong }) {
-  const {
-    // favoriteSong,
-    // upvoteSong,
-    // downvoteSong,
-    addToCart,
-    cartItems,
-    removeCartItem,
-  } = useContext(Context);
-
+function SongItem({
+  song,
+  favoriteSong,
+  addToCart,
+  removeCartItem,
+  cartItems,
+  upvoteSong,
+  downvoteSong,
+}) {
   function showCartIcon() {
     const isAlreadyInCart = cartItems.some((item) => item.id === song.id);
     if (isAlreadyInCart) {
@@ -76,11 +80,11 @@ function SongItem({ song, favoriteSong }) {
         <div>{song.artist}</div>
       </div>
       <div className="votes">
-        {song.upvotes} <AiOutlineArrowUp onClick={() => increment(song.id)} />
+        {song.upvotes} <AiOutlineArrowUp onClick={() => upvoteSong(song.id)} />
       </div>
       <div className="votes">
         {song.downvotes}{" "}
-        <AiOutlineArrowDown onClick={() => decrement(song.id)} />
+        <AiOutlineArrowDown onClick={() => downvoteSong(song.id)} />
       </div>
       {showCartIcon()}
       <div>
@@ -94,13 +98,16 @@ function SongItem({ song, favoriteSong }) {
 
 const mapDispatchToProps = {
   favoriteSong,
+  addToCart,
+  removeCartItem,
+  upvoteSong,
+  downvoteSong,
 };
 
 export default connect(
   (state) => ({
     songs: state.songsReducer,
-    upvoteSong: state.favoriteReducer,
-    downvoteSong: state.favoriteReducer,
+    cartItems: state.cartItemsReducers,
   }),
   mapDispatchToProps
 )(SongItem);

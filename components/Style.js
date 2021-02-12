@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-import { Context } from '../main-components/Context';
 import { useParams, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
@@ -22,7 +21,6 @@ export const SongPreview = styled.div`
 
  function Style({ songs }) {
 	const { styleName } = useParams();
-	// const { songs } = useContext(Context);
 
 	function createSongTemplate(song) {
 		return (

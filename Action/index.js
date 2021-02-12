@@ -36,10 +36,12 @@ export function addSong(song) {
     }
 }
 
-// function removeCartItem(songId) {
-	// const filteredCartItems = cartItems.filter(cartItem => cartItem.id !== songId);
-	// setCartItems(filteredCartItems);
-// }
+export function removeCartItem(removeCart) {
+    return {
+        type: "REMOVE_CART_ITEMS",
+        value: removeCart
+    }
+}
 
 export function emptyCart() {
     return {
@@ -54,8 +56,16 @@ export function favoriteSong(like) {
     }
 }
 
-export function decrement() {
+export function upvoteSong(like) {
     return {
-        type: "DECREMENT"
+        type: "INCREMENT",
+        value: like
+    }
+}
+
+export function downvoteSong(dislike) {
+    return {
+        type: "DECREMENT",
+        value: dislike
     }
 }

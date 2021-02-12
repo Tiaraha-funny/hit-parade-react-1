@@ -3,6 +3,7 @@ import { Context } from '../main-components/Context';
 import { AiOutlineDelete } from 'react-icons/ai';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
+import { emptyCart, removeCartItem } from '../Action';
 
 const CartItemsContainer = styled.div`
 	display: grid;
@@ -27,10 +28,7 @@ const CartItemStyles = styled.div`
 	}
 `;
 
-function Cart({ cartItems }) {
-	console.log(cartItems);
-	
-	const { removeCartItem, emptyCart } = useContext(Context);
+function Cart({ cartItems, removeCartItem, emptyCart }) {
 	const [total, setTotal] = useState(0);
 
 	useEffect(() => {
@@ -69,9 +67,14 @@ function Cart({ cartItems }) {
 	);
 }
 
+const mapDispatchToProps = {
+	removeCartItem,
+	emptyCart,
+}
+
 export default connect(
 	(state) => ({
 	  cartItems: state.cartItemsReducers,
 	}),
-	null
+	mapDispatchToProps
   )(Cart);
